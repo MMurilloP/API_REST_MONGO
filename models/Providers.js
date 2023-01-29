@@ -1,10 +1,8 @@
-const { Schema, model } = require("mongoose");
+const mongoose = require('mongoose');
+mongoose.set('strictQuery', false);
 
 
-const ProviderSchema = Schema({
-    _id: {
-        type: String,
-    },    
+const Provider = mongoose.model('Provider', new mongoose.Schema({
     company_name: {
         type: String,
     },
@@ -17,6 +15,16 @@ const ProviderSchema = Schema({
     url_web: {
         type: String,
     },
-})
+}));
 
-module.exports = model("Provider", ProviderSchema, "Providers");
+module.exports = Provider;
+
+
+// Modelo---->
+
+// const p = new Product({
+//     title: "Name",
+//     price: 1,
+//     description: "Description goes here",
+//     provider: "provider name"
+// });

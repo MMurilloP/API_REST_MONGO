@@ -1,37 +1,67 @@
-const productModel = require("../models/Products.js")
+const Provider = require('../models/Providers');
+const Product = require('../models/Products');
 
-const test = (req,res) => {
-    res.status(200).json({
-        mensaje: "Soy una accion de prueba en mi controllador productos"
-    })
+const getProducts = async (req, res) => {
+    try {
+        let products = await Product.find({}, '-_id -__v').populate('provider', '-_id -__v');
+        res.status(200).json(products);
+    }
+    catch (err) {
+        res.status(400).json({ msj: err.message });
+    }
 }
 
-const crearProduct = (req,res) => {
-    const datosIntroducidos = req.body;
-    const newProduct = new productModel(datosIntroducidos);
-    newProduct.save((error, productGuardado)=>{
-         if (error || !productGuardado) {
-            res.status(400).json({
-                status: "error",
-                mensaje:"No se ha guardado el Product",
-            })
-        } else {
-                res.status(200).json({
-                    status: "Success",
-                    Product: productGuardado,
-                    mensaje: "Product guardado con exito"           
-        })   
-       }
-    })
+const createProduct = async (req, res) => {
+    try {
+        let company_id = await Provider.findOne({ company_name: req.body.provider }, '_id');
+        const newProduct = req.body;
+        newProduct.provider = company_id;
+        let response = await new Product(newProduct);
+        let answer = await response.save();
+        res.status(201).json({
+            msj: `Producto ${answer.title} guardado en el sistema.`,
+            "product": answer
+        });
+    } catch (err) {
+        res.status(400).json({ msj: err.message });
+
+    }
 }
 
-//[GET] http://localhost:3000/api/products Retorna un objeto con los datos de todos los productos. Retorna un status 200. Usar populate() para que traiga los datos del proveedor de cada producto.
+const deleteProduct = async (req, res) => {
+    try {
+        let answer = await Product.findOneAndDelete({ title: req.body.title });
+        res.status(200).json({
+            msj: `Producto ${answer.title} eliminado del sistema.`,
+            product: answer
+        })
+    }
+    catch (err) {
+        res.status(400).json({ msj: err.message });
+    }
+}
 
-//[POST] http://localhost:3000/api/products Se envía por POST los datos del producto a crear y retorna un status 201. Payload {message: "producto creado",product:{datos_del_producto_creado}. Primero tendréis que traer los datos del proveedor para obtener el ID_provider. Después se podrá crear el producto.
+const updateProduct = async (req, res) => {
+    try {
+        let newProvider = await Provider.findOne({ company_name: req.body.newProvider }, '_id');
+        const updatedProduct = req.body;
+        updatedProduct.newProvider = newProvider;
+        let response = await Product.findOneAndUpdate({ title: updatedProduct.title }, { title: updatedProduct.newTitle, price: updatedProduct.newPrice, description: updatedProduct.newDescription, provider: updatedProduct.newProvider }, { returnDocument: 'after' });
+        res.status(200).json({
+            msj: `Producto actualizado.`,
+            product: response
+        })
+    }
+    catch (err) {
+        res.status(400).json({ msj: err.message });
+    }
+}
 
 module.exports = {
-    test,
-    crearProduct,
-    
-
+    getProducts,
+    createProduct,
+    deleteProduct,
+    updateProduct
 }
+
+

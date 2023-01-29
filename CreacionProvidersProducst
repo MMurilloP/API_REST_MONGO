@@ -1,0 +1,91 @@
+// const mongoose = require('mongoose');
+// mongoose.set('strictQuery', false);
+
+// mongoose.connect('mongodb://localhost/fakeshop')
+//     .then(() => console.log('Now connected to MongoDB!'))
+//     .catch(err => console.error('Something went wrong', err));
+
+// const Provider = mongoose.model('Provider', new mongoose.Schema({
+//     company_name: {
+//         type: String,
+//     },
+//     CIF: {
+//         type: String,
+//     },
+//     adress: {
+//         type: String,
+//     },
+//     url_web: {
+//         type: String,
+//     },
+// }));
+
+// const Product = mongoose.model('Product', new mongoose.Schema({
+//     title: {
+//         type: String,
+//     },
+//     price: {
+//         type: String,
+//     },
+//     description: {
+//         type: String,
+//     },
+//     provider: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'Provider'
+//     },
+// }));
+
+// async function crearProvider (company_name, CIF, adress, url_web ) {
+//     const provider = new Provider ({
+//         company_name,
+//         CIF,
+//         adress,
+//         url_web
+//     });
+
+//     const result = await provider.save();
+//     console.log(result)
+// }
+
+// async function crearProduct(title, price, description, provider) {
+//     const product = new Product ({
+//         title,
+//         price,
+//         description,
+//         provider
+//     });
+//     const result = await product.save();
+//     console.log(result);
+// }
+
+// async function listProduct() {
+//     const product = await Product
+//         .find() //traeme todos los productos
+//         .populate('provider', 'company_name -_id') // de la coleccion provider, traeme el company_name y me quitas el _id.
+//         .select('title provider') // quiero que me des de salida, titulo, provider y me quites el _id.
+//     console.log(product);
+// }
+
+// listProduct();
+
+
+
+// //CREACION DE PROVIDERS
+
+// // crearProvider('MARCA', '11111', 'C/11111111','https://www.11111.com/');
+// // crearProvider('AS', '22222', 'C/22222','https://www.22222.com/');
+// // crearProvider('ELMUNDO', '33333', 'C/33333','https://www.33333.com/');
+// // crearProvider('ELPAIS', '44444', 'C/44444','https://www.44444.com/');
+
+
+// // CREACION DE PRODUCTOS
+
+// // crearProduct('Periodico ELPAIS', '2€', 'Periodico de papel', '63d6a780ea1b0835b38999f8')
+// // crearProduct('Periodico AS', '2€', 'Periodico de papel', '63d6a780ea1b0835b38999f6')
+// // crearProduct('Periodico ELMUNDO', '2€', 'Periodico de papel', '63d6a780ea1b0835b38999f7')
+// // crearProduct('Periodico MARCA', '2€', 'Periodico de papel', '63d6a7bd55abb25deb69b063')
+// // crearProduct('Libro EL PAIS', '5€', 'Libro digital', '63d6a780ea1b0835b38999f8')
+// // crearProduct('Libro AS', '5€', 'Libro digital', '63d6a780ea1b0835b38999f6')
+// // crearProduct('Libro EL MUNDO', '5€', 'Libro digital', '63d6a780ea1b0835b38999f7')
+// // crearProduct('Libro MARCA', '5€', 'Libro digital', '63d6a7bd55abb25deb69b063')
